@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+
+Disallow: /_next/
+Disallow: /static/
+Disallow: /assets/
+
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+Disallow: /notifications/
+Disallow: /payment/
+
+Disallow: /profile/
+Disallow: /order-history/
+Disallow: /cart/
+Disallow: /checkout/
+
+Disallow: /search
+Disallow: /search/
+Disallow: /*?*
+Disallow: /*&*
+
+Allow: /_next/image
+
+Sitemap: https://www.thevardhmancreation.com/sitemap.xml
