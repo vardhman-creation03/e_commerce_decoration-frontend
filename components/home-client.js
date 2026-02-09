@@ -36,9 +36,11 @@ export default function Home() {
   const [loadingOccasionEvents, setLoadingOccasionEvents] = useState(true);
 
   const serviceTags = [
-    "Birthday", "Anniversary", "Baby Shower", "Welcome Baby",
-    "First Night", "Car Decoration", "Wedding (Haldi, Mehndi, Kankotri)",
-    "Artificial Flowers"
+    "Birthday Decoration", "Anniversary Decoration", "Baby Shower Decoration",
+    "Car Decoration", "First Night Decoration", "Welcome Baby Decoration",
+    "Bon Voyage Decoration", "Wedding Decoration (Haldi, Mehndi, Kankotri)",
+    "Naming Ceremony", "Mundan Decoration", "Annaprashan Decoration",
+    "Artificial Flower Decoration", "Real Flower Decoration"
   ];
 
   // Fetch Data
@@ -113,7 +115,7 @@ export default function Home() {
   };
 
   const stats = [
-    { icon: <Sparkles className="w-5 h-5" />, value: "500+", label: "Events Created", color: "text-green-500" },
+    { icon: <Sparkles className="w-5 h-5" />, value: "500+", label: "Events Managed", color: "text-green-500" },
     { icon: <Users className="w-5 h-5" />, value: "450+", label: "Happy Clients", color: "text-emerald-500" },
     { icon: <MapPin className="w-5 h-5" />, value: "2", label: "Cities Covered", color: "text-teal-500" },
     { icon: <Trophy className="w-5 h-5" />, value: "5+", label: "Years Experience", color: "text-green-600" },
@@ -135,7 +137,7 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border border-green-100">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
               <span className="text-xs font-semibold tracking-widest uppercase text-green-600">
-                Premium Event Decoration
+                Premium Event Management & Decoration
               </span>
             </div>
 
@@ -268,7 +270,7 @@ export default function Home() {
 
           <div className="text-center mt-12">
             <Button asChild variant="outline" className="rounded-full border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-8 h-12 font-semibold">
-              <Link href="/events/all-events" className="flex items-center gap-2">
+              <Link href="/all-events" className="flex items-center gap-2">
                 View All Categories <ArrowRight className="w-4 h-4" />
               </Link>
             </Button>

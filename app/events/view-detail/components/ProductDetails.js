@@ -88,6 +88,13 @@ export default function ProductDetails({ product }) {
           localStorage.setItem("OrderId", result.booking._id);
           localStorage.setItem("orderSummary", JSON.stringify(orderSummary));
           localStorage.setItem("userMobile", formData.phone);
+          // Store event specific info for the payment page
+          localStorage.setItem("bookingDetails", JSON.stringify({
+            eventName: product.title,
+            date: formData.partyDate,
+            time: formData.partyTime,
+            location: formData.location
+          }));
         }
 
         toast({

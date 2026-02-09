@@ -65,7 +65,7 @@ export default function ProductPageClient({ id }) {
           <h2 className="text-2xl font-bold text-gray-900">Event Not Found</h2>
           <p className="text-gray-600">{error || "The event you're looking for doesn't exist."}</p>
           <Link
-            href="/events/all-events"
+            href="/all-events"
             className="inline-flex items-center gap-2 bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition-all shadow-lg hover:shadow-xl"
           >
             Explore Events
@@ -91,7 +91,7 @@ export default function ProductPageClient({ id }) {
             <span>Home</span>
           </Link>
           <ChevronRight className="w-4 h-4" />
-          <Link href="/events/all-events" className="hover:text-green-600 transition-colors">
+          <Link href="/all-events" className="hover:text-green-600 transition-colors">
             Events
           </Link>
           <ChevronRight className="w-4 h-4" />

@@ -290,740 +290,434 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-green-50/30 to-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <div className="min-h-screen bg-gray-50/30 font-sans">
+      {/* Premium Hero Section */}
+      <section className="relative overflow-hidden bg-white pb-12 pt-20 lg:pt-28">
+        <div className="absolute inset-0 bg-gradient-to-b from-green-50/50 via-white to-white" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-green-100/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+        
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="max-w-3xl mx-auto text-center"
+            className="flex flex-col md:flex-row items-center justify-between gap-8"
           >
-            <motion.div variants={fadeIn} className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 leading-tight tracking-tight">
-                My Account
+            <motion.div variants={fadeIn} className="text-center md:text-left space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100/50 text-green-700 text-xs font-semibold uppercase tracking-wider mb-4 border border-green-200">
+                <User className="w-3 h-3" /> Personal Account
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                Welcome, {userData.name.split(' ')[0] || 'Member'}
               </h1>
-              <p className="text-base sm:text-lg text-gray-600 font-light max-w-xl mx-auto leading-relaxed">
-                Manage your profile, addresses, and preferences
+              <p className="text-lg text-gray-500 max-w-lg font-light">
+                Manage your profile settings, addresses, and account security in one place.
               </p>
+            </motion.div>
+            
+            {/* Quick Stats or Avatar Placeholder */}
+            <motion.div variants={fadeIn} className="hidden md:flex gap-6">
+              <div className="flex flex-col items-center p-4 bg-white rounded-2xl shadow-sm border border-gray-100 min-w-[120px]">
+                <span className="text-2xl font-bold text-gray-900">{userAddresses?.length || 0}</span>
+                <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Addresses</span>
+              </div>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-3 py-6 sm:px-4 sm:py-8">
-      {loading ? (
-        <div className="flex flex-col justify-center items-center min-h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 border-t-green-500 mb-4"></div>
-          <p className="text-sm text-gray-500 font-light">Loading profile...</p>
-        </div>
-      ) : (
-        <>
-
+      {/* Main Content Area */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-8 relative z-10">
+        {loading ? (
+          <div className="flex flex-col justify-center items-center min-h-[40vh] bg-white rounded-3xl shadow-sm border border-gray-100">
+            <div className="animate-spin rounded-full h-10 w-10 border-2 border-gray-200 border-t-green-500 mb-4"></div>
+            <p className="text-sm text-gray-500">Loading your profile...</p>
+          </div>
+        ) : (
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
-            className="space-y-4 sm:space-y-8"
+            className="space-y-8"
           >
-            <div className="block sm:hidden mb-4 relative" ref={dropdownRef}>
-              <div
-                className="w-full p-2 border rounded-lg bg-white text-sm flex justify-between items-center cursor-pointer"
+            {/* Mobile Dropdown Navigation */}
+            <div className="md:hidden relative z-50" ref={dropdownRef}>
+              <button
+                className="w-full p-4 bg-white border border-gray-200 rounded-xl shadow-sm flex justify-between items-center text-left"
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setIsDropdownOpen((prev) => !prev);
-                  } else if (e.key === "Escape") {
-                    setIsDropdownOpen(false);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-expanded={isDropdownOpen}
-                aria-controls="dropdown-options"
               >
-                <span>
-                  {activeTab === "profile"
-                    ? "Profile"
-                    : activeTab === "addresses"
-                    ? "Addresses"
-                    : "Account Actions"}
-                </span>
-                <ChevronDown
-                  className={`h-5 w-5 transition-transform ${
-                    isDropdownOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </div>
-              {isDropdownOpen && (
-                <div
-                  id="dropdown-options"
-                  className="absolute w-full mt-1 border rounded-lg bg-white shadow-lg z-10"
-                >
-                  <div
-                    className="p-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                    onClick={() => {
-                      setActiveTab("profile");
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    <User className="h-5 w-5" />
-                    Profile
-                  </div>
-                  <div
-                    className="p-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                    onClick={() => {
-                      setActiveTab("addresses");
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    <MapPin className="h-5 w-5" />
-                    Addresses
-                  </div>
-                  <div
-                    className="p-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                    onClick={() => {
-                      setActiveTab("security");
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    <LogOut className="h-5 w-5" />
-                    Account Actions
-                  </div>
+                <div className="flex items-center gap-3">
+                  {activeTab === "profile" && <User className="h-5 w-5 text-green-600" />}
+                  {activeTab === "addresses" && <MapPin className="h-5 w-5 text-green-600" />}
+                  {activeTab === "security" && <LogOut className="h-5 w-5 text-green-600" />}
+                  <span className="font-medium text-gray-900 capitalize">
+                    {activeTab === "security" ? "Account Actions" : activeTab}
+                  </span>
                 </div>
-              )}
+                <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+              
+              <AnimatePresence>
+                {isDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden p-1"
+                  >
+                    {[
+                      { id: 'profile', icon: User, label: 'Profile' },
+                      { id: 'addresses', icon: MapPin, label: 'Addresses' },
+                      { id: 'security', icon: LogOut, label: 'Account Actions' }
+                    ].map((item) => (
+                      <div
+                        key={item.id}
+                        className={`p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors ${activeTab === item.id ? 'bg-green-50 text-green-700' : 'hover:bg-gray-50 text-gray-600'}`}
+                        onClick={() => {
+                          setActiveTab(item.id);
+                          setIsDropdownOpen(false);
+                        }}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span className="text-sm font-medium">{item.label}</span>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            <TabsList className="hidden sm:grid grid-cols-2 md:grid-cols-3 gap-2 rounded-none bg-gray-100 h-14">
-              <TabsTrigger value="profile" className="flex items-center gap-2 rounded-none font-light data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">Profile</span>
-              </TabsTrigger>
-              <TabsTrigger value="addresses" className="flex items-center gap-2 rounded-none font-light data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
-                <MapPin className="h-4 w-4" />
-                <span className="hidden sm:inline">Addresses</span>
-              </TabsTrigger>
-              <TabsTrigger value="security" className="flex items-center gap-2 rounded-none font-light data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Account Actions</span>
-              </TabsTrigger>
+            {/* Desktop Navigation */}
+            <TabsList className="hidden md:flex p-1 bg-white/50 backdrop-blur-sm border border-gray-200 rounded-2xl w-fit mx-auto shadow-sm">
+              {[
+                { id: 'profile', icon: User, label: 'Profile Info' },
+                { id: 'addresses', icon: MapPin, label: 'My Addresses' },
+                { id: 'security', icon: LogOut, label: 'Settings' }
+              ].map((item) => (
+                <TabsTrigger
+                  key={item.id}
+                  value={item.id}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl data-[state=active]:bg-green-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 font-medium text-gray-600"
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
-            <TabsContent value="profile">
-              <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <Card className="border border-gray-200 rounded-none">
-                  <CardHeader className="border-b border-gray-100">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                      <div>
-                        <CardTitle className="text-lg sm:text-xl font-light text-gray-900">
-                          Profile Information
-                        </CardTitle>
-                        <CardDescription className="text-sm sm:text-base font-light text-gray-600">
-                          Manage your personal information
-                        </CardDescription>
-                      </div>
-                      <Button
-                        variant={isEditing ? "default" : "outline"}
-                        onClick={() =>
-                          isEditing ? handleSaveProfile() : setIsEditing(true)
-                        }
-                        disabled={loading}
-                        className="w-full sm:w-auto rounded-none font-light"
-                      >
-                        {loading ? (
-                          <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                            <span>Saving...</span>
-                          </div>
-                        ) : isEditing ? (
-                          <>
-                            <Save className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-                            Save Changes
-                          </>
-                        ) : (
-                          <>
-                            <Edit className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-                            Edit Profile
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-col md:flex-row gap-6 sm:gap-8">
-                      <div className="flex-1 space-y-3 sm:space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="name" className="text-sm sm:text-base font-light text-gray-900">
-                              Full Name
-                            </Label>
-                            <Input
-                              id="name"
-                              value={userData.name}
-                              onChange={(e) =>
-                                setUserData({ ...userData, name: e.target.value })
-                              }
-                              disabled={!isEditing}
-                              className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="email" className="text-sm sm:text-base font-light text-gray-900">
-                              Email Address
-                            </Label>
-                            <Input
-                              id="email"
-                              type="email"
-                              value={userData.email}
-                              onChange={(e) =>
-                                setUserData({ ...userData, email: e.target.value })
-                              }
-                              disabled={!isEditing}
-                              className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="phone" className="text-sm sm:text-base font-light text-gray-900">
-                              Phone Number
-                            </Label>
-                            <Input
-                              id="phone"
-                              value={userData.phone}
-                              onChange={(e) =>
-                                setUserData({ ...userData, phone: e.target.value })
-                              }
-                              disabled={!isEditing}
-                              className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <AnimatePresence>
-                      {profileUpdated && (
-                        <motion.div
-                          className="mt-4 p-4 bg-green-50 rounded-lg flex items-center gap-2"
-                          variants={profileSuccessAnimation}
-                          initial="hidden"
-                          animate="visible"
-                          exit="exit"
-                        >
-                          <motion.div
-                            animate={{
-                              scale: [1, 1.1, 1],
-                              transition: { duration: 0.5, repeat: 1 },
-                            }}
-                          >
-                            <CheckCircle className="h-6 w-6 text-green-500" />
-                          </motion.div>
-                          <motion.p
-                            className="text-green-600 font-semibold text-sm sm:text-base"
-                            animate={{
-                              opacity: [0, 1],
-                              transition: { delay: 0.2, duration: 0.3 },
-                            }}
-                          >
-                            Profile Updated Successfully!
-                          </motion.p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </TabsContent>
-
-            <TabsContent value="addresses">
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={staggerContainer}
-                className="space-y-4 sm:space-y-6"
-              >
-                <motion.div variants={fadeIn}>
-                  <Card className="border border-gray-200 rounded-none">
-                    <CardHeader className="border-b border-gray-100">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div className="max-w-4xl mx-auto">
+              {/* Profile Tab */}
+              <TabsContent value="profile" className="focus-visible:outline-none">
+                <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+                  <Card className="border-none shadow-lg shadow-gray-100 bg-white rounded-3xl overflow-hidden">
+                    <CardHeader className="bg-gray-50/50 border-b border-gray-100 p-8">
+                      <div className="flex justify-between items-center">
                         <div>
-                          <CardTitle className="text-lg sm:text-xl font-light text-gray-900">
-                            Addresses
-                          </CardTitle>
-                          <CardDescription className="text-sm sm:text-base font-light text-gray-600">
-                            Manage your shipping and billing addresses
-                          </CardDescription>
+                          <CardTitle className="text-2xl font-bold text-gray-900">Personal Information</CardTitle>
+                          <CardDescription className="text-gray-500 mt-1">View and update your personal details</CardDescription>
                         </div>
-                        {userAddresses?.length > 0 && !showAddAddressForm && (
-                          <Button
-                            onClick={() => setShowAddAddressForm(true)}
-                            className="w-full sm:w-auto rounded-none font-light"
-                          >
-                            <Plus className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-                            Add New Address
-                          </Button>
-                        )}
+                        <Button
+                          variant={isEditing ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => isEditing ? handleSaveProfile() : setIsEditing(true)}
+                          disabled={loading}
+                          className={`rounded-full px-6 transition-all ${isEditing ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-200' : 'bg-white hover:bg-gray-50 border-gray-200'}`}
+                        >
+                           {loading ? (
+                            "Saving..." 
+                          ) : isEditing ? (
+                            <><Save className="w-4 h-4 mr-2"/> Save Changes</>
+                          ) : (
+                             <><Edit className="w-4 h-4 mr-2"/> Edit Profile</>
+                          )}
+                        </Button>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      {addressLoading ? (
-                        <div className="flex justify-center items-center py-8">
-                          <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                            <span>Loading addresses...</span>
-                          </div>
+                    <CardContent className="p-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="col-span-1 md:col-span-2 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2.5">
+                                    <Label className="text-sm font-medium text-gray-700 ml-1">Full Name</Label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <Input
+                                        value={userData.name}
+                                        onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+                                        disabled={!isEditing}
+                                        className="pl-10 h-11 rounded-xl border-gray-200 bg-gray-50/30 focus:bg-white transition-all disabled:opacity-70 disabled:bg-gray-50"
+                                        placeholder="Enter your full name"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2.5">
+                                    <Label className="text-sm font-medium text-gray-700 ml-1">Phone Number</Label>
+                                    <div className="relative">
+                                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <Input
+                                        value={userData.phone}
+                                        onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
+                                        disabled={!isEditing}
+                                        className="pl-10 h-11 rounded-xl border-gray-200 bg-gray-50/30 focus:bg-white transition-all disabled:opacity-70 disabled:bg-gray-50"
+                                        placeholder="Enter your phone number"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2.5 md:col-span-2">
+                                    <Label className="text-sm font-medium text-gray-700 ml-1">Email Address</Label>
+                                     <div className="relative">
+                                         <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 flex items-center justify-center font-bold">@</div>
+                                        <Input
+                                        value={userData.email}
+                                        onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                                        disabled={!isEditing} // Email usually readonly, but editable here if API supports
+                                        className="pl-10 h-11 rounded-xl border-gray-200 bg-gray-50/30 focus:bg-white transition-all disabled:opacity-70 disabled:bg-gray-50"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      ) : userAddresses?.length === 0 && !showAddAddressForm ? (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.5, delay: 0.3 }}
-                          className="text-center py-12 bg-gray-50 rounded-lg"
-                        >
-                          <MapPin className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
-                          <h3
-                            className="text-base sm:text-lg font-semibold text-gray-700 mb-6"
-                            role="alert"
-                            aria-live="assertive"
+                      </div>
+                      
+                      <AnimatePresence>
+                        {profileUpdated && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            className="mt-6 p-4 bg-green-50 border border-green-100 rounded-xl flex items-center gap-3"
                           >
-                            No Address Found
-                          </h3>
-                          <Button
+                            <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                <CheckCircle className="h-5 w-5 text-green-600" />
+                            </div>
+                            <p className="text-green-800 font-medium">Your profile has been updated successfully.</p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              {/* Addresses Tab */}
+              <TabsContent value="addresses" className="focus-visible:outline-none">
+                <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="space-y-6">
+                    {/* Header Action */}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                         <div>
+                            <h2 className="text-2xl font-bold text-gray-900">Saved Addresses</h2>
+                            <p className="text-gray-500">Manage your shipping destinations</p>
+                        </div>
+                        {!showAddAddressForm && (
+                            <Button
                             onClick={() => setShowAddAddressForm(true)}
-                            className="w-full sm:w-auto"
-                          >
-                            <Plus className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-                            Add New Address
-                          </Button>
-                        </motion.div>
-                      ) : showAddAddressForm ? (
-                        <AnimatePresence>
-                          {addressAdded ? (
-                            <motion.div
-                              key="success"
-                              className="flex flex-col items-center justify-center space-y-4 py-8 bg-green-50 rounded-lg"
-                              variants={addressSuccessAnimation}
-                              initial="hidden"
-                              animate="visible"
-                              exit="exit"
+                            className="rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-200 px-6"
                             >
-                              <motion.div
-                                animate={{
-                                  scale: [1, 1.3, 1],
-                                  rotate: [0, 180, 0],
-                                  transition: { duration: 0.8, repeat: 1 },
-                                }}
-                              >
-                                <CheckCircle className="h-16 w-16 text-green-500" />
-                              </motion.div>
-                              <motion.div
-                                className="relative"
-                                animate={{
-                                  scale: [1, 1.1, 1],
-                                  transition: {
-                                    duration: 1.5,
-                                    repeat: Infinity,
-                                  },
-                                }}
-                              >
-                                <motion.div
-                                  className="absolute inset-0 rounded-full bg-green-200/50"
-                                  animate={{
-                                    scale: [1, 2],
-                                    opacity: [0.5, 0],
-                                    transition: {
-                                      duration: 1.5,
-                                      repeat: Infinity,
-                                      delay: 0.3,
-                                    },
-                                  }}
-                                />
-                                <p
-                                  className="text-base sm:text-lg font-semibold text-green-600"
-                                  role="alert"
-                                  aria-live="assertive"
-                                >
-                                  Address Added Successfully!
-                                </p>
-                              </motion.div>
-                            </motion.div>
-                          ) : (
-                            <motion.div
-                              key="form"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              <form
-                                onSubmit={handleAddAddressSubmit}
-                                className="space-y-3 sm:space-y-4 max-w-lg mx-auto"
-                              >
-                                <div className="space-y-2">
-                                  <Label
-                                    htmlFor="street"
-                                    className="text-sm sm:text-base font-light text-gray-900"
-                                  >
-                                    Street Address
-                                  </Label>
-                                  <Input
-                                    id="street"
-                                    name="street"
-                                    value={addressFormData.street}
-                                    onChange={handleAddAddressChange}
-                                    required
-                                    className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                                  />
+                            <Plus className="mr-2 h-4 w-4" /> Add New Address
+                            </Button>
+                        )}
+                    </div>
+
+                  {addressLoading ? (
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {[1, 2].map((i) => (
+                            <div key={i} className="h-48 rounded-2xl bg-gray-100 animate-pulse" />
+                        ))}
+                     </div>
+                  ) : userAddresses?.length === 0 && !showAddAddressForm ? (
+                    <motion.div variants={fadeIn} className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-300">
+                      <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <MapPin className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">No Addresses Found</h3>
+                      <p className="text-gray-500 mb-6 max-w-sm mx-auto">Add a shipping address to speed up your checkout process.</p>
+                      <Button onClick={() => setShowAddAddressForm(true)} variant="outline" className="rounded-full border-gray-300">
+                        Add First Address
+                      </Button>
+                    </motion.div>
+                  ) : showAddAddressForm ? (
+                    <motion.div variants={slideUp} className="bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-gray-100/50">
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-xl font-bold text-gray-900">Add New Address</h3>
+                            <Button variant="ghost" size="sm" onClick={() => setShowAddAddressForm(false)} className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 p-0">
+                                <span className="sr-only">Close</span>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </Button>
+                        </div>
+                        
+                        {addressAdded ? (
+                            <div className="text-center py-12">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                                    <CheckCircle className="h-8 w-8 text-green-600" />
                                 </div>
-                                <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                                  <div className="space-y-2">
-                                    <Label
-                                      htmlFor="city"
-                                      className="text-sm sm:text-base font-light text-gray-900"
-                                    >
-                                      City
-                                    </Label>
-                                    <Input
-                                      id="city"
-                                      name="city"
-                                      value={addressFormData.city}
-                                      onChange={handleAddAddressChange}
-                                      required
-                                      className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label
-                                      htmlFor="state"
-                                      className="text-sm sm:text-base font-light text-gray-900"
-                                    >
-                                      State
-                                    </Label>
-                                    <Input
-                                      id="state"
-                                      name="state"
-                                      value={addressFormData.state}
-                                      onChange={handleAddAddressChange}
-                                      required
-                                      className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                                    />
-                                  </div>
+                                <h3 className="text-xl font-bold text-gray-900">Address Added!</h3>
+                                <p className="text-gray-500 mt-2">Redirecting back to your list...</p>
+                            </div>
+                        ) : (
+                             <form onSubmit={handleAddAddressSubmit} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label>Street Address</Label>
+                                        <Input name="street" value={addressFormData.street} onChange={handleAddAddressChange} required className="rounded-xl h-11 bg-gray-50/50 border-gray-200" placeholder="123 Main St" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>City</Label>
+                                        <Input name="city" value={addressFormData.city} onChange={handleAddAddressChange} required className="rounded-xl h-11 bg-gray-50/50 border-gray-200" placeholder="New York" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>State</Label>
+                                        <Input name="state" value={addressFormData.state} onChange={handleAddAddressChange} required className="rounded-xl h-11 bg-gray-50/50 border-gray-200" placeholder="NY" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Zip Code</Label>
+                                        <Input name="zip" value={addressFormData.zip} onChange={handleAddAddressChange} required className="rounded-xl h-11 bg-gray-50/50 border-gray-200" placeholder="10001" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Country</Label>
+                                        <Input name="country" value={addressFormData.country} onChange={handleAddAddressChange} required className="rounded-xl h-11 bg-gray-50/50 border-gray-200" placeholder="United States" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Address Type</Label>
+                                        <select 
+                                            name="type" 
+                                            value={addressFormData.type} 
+                                            onChange={handleAddAddressChange} 
+                                            className="w-full h-11 rounded-xl border-gray-200 bg-gray-50/50 px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                        >
+                                            <option value="Home">Home</option>
+                                            <option value="Work">Work</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                                  <div className="space-y-2">
-                                    <Label
-                                      htmlFor="zip"
-                                      className="text-sm sm:text-base font-light text-gray-900"
-                                    >
-                                      Zip Code
-                                    </Label>
-                                    <Input
-                                      id="zip"
-                                      name="zip"
-                                      value={addressFormData.zip}
-                                      onChange={handleAddAddressChange}
-                                      required
-                                      className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label
-                                      htmlFor="country"
-                                      className="text-sm sm:text-base font-light text-gray-900"
-                                    >
-                                      Country
-                                    </Label>
-                                    <Input
-                                      id="country"
-                                      name="country"
-                                      value={addressFormData.country}
-                                      onChange={handleAddAddressChange}
-                                      required
-                                      className="text-sm sm:text-base rounded-none border-gray-200 font-light focus:border-gray-400"
-                                    />
-                                  </div>
+                                <div className="flex gap-4 pt-4">
+                                     <Button type="submit" disabled={isAddressAdding} className="flex-1 rounded-xl h-11 bg-green-600 hover:bg-green-700 text-white">
+                                        {isAddressAdding ? "Saving..." : "Save Address"}
+                                     </Button>
+                                     <Button type="button" variant="outline" onClick={() => setShowAddAddressForm(false)} disabled={isAddressAdding} className="flex-1 rounded-xl h-11 border-gray-200">
+                                        Cancel
+                                     </Button>
                                 </div>
-                                <div className="flex gap-2">
-                                  <Button
-                                    type="submit"
-                                    className="w-full rounded-none font-light"
-                                    disabled={isAddressAdding}
-                                  >
-                                    {isAddressAdding ? (
-                                      <div className="flex items-center gap-2">
-                                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                                        <span>Saving...</span>
-                                      </div>
-                                    ) : (
-                                      "Save Address"
-                                    )}
-                                  </Button>
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    className="w-full rounded-none font-light"
-                                    onClick={() => setShowAddAddressForm(false)}
-                                    disabled={isAddressAdding}
-                                  >
-                                    Cancel
-                                  </Button>
-                                </div>
-                              </form>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                          {userAddresses?.map((address) => (
-                            <motion.div
-                              key={address._id}
-                              variants={slideUp}
-                              whileHover={{ y: -4 }}
-                              transition={{ duration: 0.2 }}
-                              className={`border border-gray-200 p-3 sm:p-4 relative ${
+                             </form>
+                        )}
+                    </motion.div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {userAddresses?.map((address) => (
+                          <motion.div
+                            key={address._id}
+                            variants={slideUp}
+                            whileHover={{ y: -5 }}
+                            className={`relative p-6 rounded-2xl border transition-all duration-300 ${
                                 address.isDefault
-                                  ? "border-gray-900 bg-gray-50"
-                                  : "border-gray-200"
-                              }`}
-                            >
-                              <div className="flex justify-between items-start mb-2">
-                                <div className="flex items-center gap-2">
-                                  <div
-                                    className={`p-1.5 rounded-full bg-blue-100`}
-                                  >
-                                    <Home className="h-4 w-4 text-blue-600" />
-                                  </div>
-                                  <span className="font-medium text-sm sm:text-base">
+                                  ? "bg-green-50/30 border-green-500 shadow-md ring-1 ring-green-100"
+                                  : "bg-white border-gray-200 hover:border-green-200 hover:shadow-lg hover:shadow-green-50/50"
+                            }`}
+                          >
+                            <div className="flex justify-between items-start mb-4">
+                              <div className="flex items-center gap-2">
+                                <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${address.type === 'Work' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`}>
+                                    {address.type === 'Work' ? <span className="w-1.5 h-1.5 rounded-full bg-blue-500"/> : <span className="w-1.5 h-1.5 rounded-full bg-orange-500"/>}
                                     {address.type || "Home"}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="space-y-1 text-xs sm:text-sm">
-                                <p className="font-medium">
-                                  {"Your Address is: "}
-                                </p>
-                                <p>{address.street}</p>
-                                <p>
-                                  {address.city}, {address.state} {address.zip}
-                                </p>
-                                <p>{address.country}</p>
-                                {address.phone && (
-                                  <p className="flex items-center gap-1 mt-2">
-                                    <Phone className="h-3 w-3" />
-                                    {address.phone}
-                                  </p>
+                                </span>
+                                {address.isDefault && (
+                                    <span className="text-xs font-medium text-green-600 flex items-center gap-1">
+                                        <CheckCircle className="w-3 h-3" /> Default
+                                    </span>
                                 )}
                               </div>
-                              <div className="flex flex-wrap gap-2 mt-3 sm:mt-4">
+                              <div className="flex gap-2">
                                 <Button
                                   variant="ghost"
-                                  size="sm"
-                                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-none font-light"
-                                  onClick={() =>
-                                    handleDeleteAddress(address._id)
-                                  }
+                                  size="icon"
+                                  onClick={() => handleDeleteAddress(address._id)}
+                                  className="h-8 w-8 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50"
                                 >
-                                  <Trash className="h-5 w-5 sm:h-4 sm:w-4 mr-1" />
-                                  Delete
+                                  <Trash className="h-4 w-4" />
                                 </Button>
                               </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </motion.div>
-            </TabsContent>
-
-            <TabsContent value="security">
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={staggerContainer}
-                className="space-y-4 sm:space-y-6"
-              >
-                <motion.div variants={fadeIn}>
-                  <Card className="border border-gray-200 rounded-none">
-                    <CardHeader className="border-b border-gray-100">
-                      <CardTitle className="text-lg sm:text-xl font-light text-gray-900">
-                        Account Actions
-                      </CardTitle>
-                      <CardDescription className="text-sm sm:text-base font-light text-gray-600">
-                        Manage your account status
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div
-                        className="block sm:hidden mb-4 relative"
-                        ref={actionsDropdownRef}
-                      >
-                        <div
-                          className="w-full p-2 border rounded-lg bg-white text-sm flex justify-between items-center cursor-pointer"
-                          onClick={() =>
-                            setIsActionsDropdownOpen((prev) => !prev)
-                          }
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              setIsActionsDropdownOpen((prev) => !prev);
-                            } else if (e.key === "Escape") {
-                              setIsActionsDropdownOpen(false);
-                            }
-                          }}
-                          role="button"
-                          tabIndex={0}
-                          aria-expanded={isActionsDropdownOpen}
-                          aria-controls="actions-dropdown-options"
-                        >
-                          <span>{selectedAction || "Select Action"}</span>
-                          <ChevronDown
-                            className={`h-5 w-5 transition-transform ${
-                              isActionsDropdownOpen ? "rotate-180" : ""
-                            }`}
-                          />
-                        </div>
-                        {isActionsDropdownOpen && (
-                          <div
-                            id="actions-dropdown-options"
-                            className="absolute w-full mt-1 border rounded-lg bg-white shadow-lg z-10"
-                          >
-                            <div
-                              className="p-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                              onClick={() => {
-                                setSelectedAction("Sign Out from All Devices");
-                                setIsActionsDropdownOpen(false);
-                                handleSignOut();
-                              }}
-                            >
-                              <LogOut className="h-5 w-5" />
-                              Sign Out from All Devices
                             </div>
-                            <div
-                              className="p-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                              onClick={() => {
-                                setSelectedAction("Delete Account");
-                                setIsActionsDropdownOpen(false);
-                                document
-                                  .getElementById("delete-account-trigger")
-                                  ?.click();
-                              }}
-                            >
-                              <Trash className="h-5 w-5 text-red-500" />
-                              Delete Account
+                            
+                            <div className="space-y-1 mb-6">
+                                <p className="font-bold text-gray-900 text-lg">{addressFormData.name || userData.name}</p>
+                                <p className="text-gray-600 text-sm leading-relaxed">
+                                    {address.street}<br/>
+                                    {address.city}, {address.state} {address.zip}<br/>
+                                    {address.country}
+                                </p>
                             </div>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="hidden sm:block space-y-3 sm:space-y-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                          <div className="space-y-0.5">
-                            <Label className="text-sm sm:text-base">
-                              Sign Out from All Devices
-                            </Label>
-                            <p className="text-xs sm:text-sm text-gray-500">
-                              Log out from all devices where you're currently
-                              signed in
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            className="w-full sm:w-auto rounded-none font-light"
-                            onClick={handleSignOut}
-                          >
-                            <LogOut className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-                            Sign Out
-                          </Button>
-                        </div>
-                        <Separator />
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                          <div className="space-y-0.5">
-                            <Label
-                              className="text-sm sm:text-base"
-                              htmlFor="delete-account"
-                            >
-                              Delete Account
-                            </Label>
-                            <p className="text-xs sm:text-sm text-gray-500">
-                              Permanently delete your account and all associated
-                              data
-                            </p>
-                          </div>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="destructive"
-                                className="w-full sm:w-auto rounded-none font-light"
-                                id="delete-account-trigger"
-                              >
-                                <Trash className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
-                                Delete Account
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Are you absolutely sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This action cannot be undone. This will
-                                  permanently delete your account and remove all
-                                  your data from our servers.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={handleDeleteAccount}
+                            
+                            {!address.isDefault && (
+                                <Button 
+                                    variant="outline" 
+                                    className="w-full rounded-xl border-gray-200 hover:border-green-500 hover:text-green-600 text-xs"
+                                    onClick={() => handleSetDefaultAddress(address._id)}
                                 >
-                                  Delete Account
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      </div>
-
-                      <div className="block sm:hidden">
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <button
-                              id="delete-account-trigger"
-                              className="hidden"
-                            >
-                              Trigger Delete Account Dialog
-                            </button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Are you absolutely sure?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will
-                                permanently delete your account and remove all
-                                your data from our servers.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={handleDeleteAccount}>
-                                Delete Account
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </CardContent>
-                  </Card>
+                                    Set as Default
+                                </Button>
+                            )}
+                          </motion.div>
+                        ))}
+                    </div>
+                  )}
                 </motion.div>
-              </motion.div>
-            </TabsContent>
+              </TabsContent>
+
+              {/* Account Actions Tab */}
+              <TabsContent value="security" className="focus-visible:outline-none">
+                <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+                   <Card className="border-none shadow-lg shadow-gray-100 bg-white rounded-3xl overflow-hidden">
+                        <CardHeader className="bg-red-50/30 border-b border-red-50 p-8">
+                            <CardTitle className="text-2xl font-bold text-gray-900">Danger Zone</CardTitle>
+                            <CardDescription className="text-red-500/80">Irreversible account actions</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-8 space-y-6">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50/50">
+                                <div>
+                                    <h4 className="font-semibold text-gray-900">Sign Out</h4>
+                                    <p className="text-sm text-gray-500">Sign out from your account on this device</p>
+                                </div>
+                                <Button variant="outline" onClick={handleSignOut} className="rounded-xl border-gray-300 hover:bg-gray-100">
+                                    <LogOut className="w-4 h-4 mr-2" /> Sign Out
+                                </Button>
+                            </div>
+                            
+                            <Separator />
+                            
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 rounded-xl border border-red-100 bg-red-50/30">
+                                <div>
+                                    <h4 className="font-semibold text-red-700">Delete Account</h4>
+                                    <p className="text-sm text-red-500/80">Permanently remove your account and all data</p>
+                                </div>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="destructive" className="rounded-xl bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200">
+                                            Delete Account
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="rounded-2xl">
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete your account
+                                                and remove your data from our servers.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={handleDeleteAccount} className="rounded-xl bg-red-600 hover:bg-red-700">
+                                                Yes, delete my account
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                        </CardContent>
+                   </Card>
+                </motion.div>
+              </TabsContent>
+            </div>
           </Tabs>
-        </>
-      )}
+        )}
       </div>
     </div>
   );

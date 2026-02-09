@@ -72,11 +72,11 @@ export default function AboutPage() {
           >
             <motion.div variants={fadeIn} className="space-y-4">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 leading-tight tracking-tight">
-                About Us
+                Event Management & Decoration Services
               </h1>
               <p className="text-base sm:text-lg text-gray-600 font-light max-w-xl mx-auto leading-relaxed">
-                Making every celebration magical with creative, high-quality
-                decorations for birthdays, anniversaries, baby showers, and more.
+                Your one-stop destination for premium event planning and decoration. 
+                From intimate birthdays to grand weddings, we manage it all with elegance and perfection.
               </p>
             </motion.div>
           </motion.div>
@@ -120,22 +120,19 @@ export default function AboutPage() {
                 >
                   <motion.div variants={fadeIn}>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 mb-6 leading-tight tracking-tight">
-                      From Inspiration to Celebration
+                      Experts in Event Management
                     </h2>
                     <div className="space-y-4">
                       <p className="text-base text-gray-600 font-light leading-relaxed">
-                        Vardhman Decoration was founded with a passion for
-                        transforming ordinary spaces into extraordinary memories.
-                        Our journey began by helping families and friends
-                        celebrate life's special moments—birthdays, anniversaries,
-                        baby showers, and more—with beautiful, creative
-                        decorations.
+                        Vardhman Decoration has evolved from a passion project into a premier
+                        event management company. We understand that every event is a unique
+                        story waiting to be told. Whether it's a vibrant Haldi ceremony, 
+                        a serene Welcome Baby setup, or a grand Wedding reception, we handle every detail.
                       </p>
                       <p className="text-base text-gray-600 font-light leading-relaxed">
-                        We believe every occasion deserves a unique touch. Our
-                        team works tirelessly to design and deliver decorations
-                        that bring your vision to life, making your celebrations
-                        unforgettable.
+                        Our expertise covers everything from traditional rituals like Kankotri Lekhan 
+                        and Mundan branding to modern celebrations like Baby Showers and Anniversaries. 
+                        With a blend of real and artificial floral artistry, we create ambiances that leave a lasting impression.
                       </p>
                     </div>
                   </motion.div>
@@ -192,6 +189,8 @@ export default function AboutPage() {
                   </div>
                 </motion.div>
               </TabsContent>
+
+
 
               {/* Mission Tab */}
               <TabsContent value="mission" className="space-y-12 md:space-y-16">

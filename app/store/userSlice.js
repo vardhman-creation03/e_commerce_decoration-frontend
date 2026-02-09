@@ -74,14 +74,28 @@ export const getAllCustomers = createAsyncThunk(
     }
 );
 
+export const getUserDashboardStats = createAsyncThunk(
+    'user/getDashboardStats',
+    async (_, { rejectWithValue }) => {
+        try {
+            const data = await userService.getUserDashboardStats();
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
 
 const userSlice = createSlice({
     name: 'user',
     initialState: {
         profile: null,
         addressList: [],
+        dashboardStats: null,
         loading: false,
         addressLoading: false,
+        dashboardLoading: false,
         error: null,
     },
     reducers: {
@@ -143,6 +157,18 @@ const userSlice = createSlice({
             // Delete Address
             .addCase(deleteUserAddress.fulfilled, (state, action) => {
                 state.addressList = state.addressList.filter(addr => addr._id !== action.payload);
+            })
+            // Dashboard Stats
+            .addCase(getUserDashboardStats.pending, (state) => {
+                state.dashboardLoading = true;
+            })
+            .addCase(getUserDashboardStats.fulfilled, (state, action) => {
+                state.dashboardLoading = false;
+                state.dashboardStats = action.payload;
+            })
+            .addCase(getUserDashboardStats.rejected, (state, action) => {
+                state.dashboardLoading = false;
+                state.error = action.payload;
             });
     },
 });
