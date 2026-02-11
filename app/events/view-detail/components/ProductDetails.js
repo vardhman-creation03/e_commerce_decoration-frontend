@@ -29,6 +29,7 @@ export default function ProductDetails({ product }) {
     partyDate: "",
     partyTime: "",
     location: product.location ? product.location.split(",")[0].trim() : "Ahmedabad",
+    message: "", // Initialize message field
   });
 
   useEffect(() => {
@@ -320,6 +321,22 @@ export default function ProductDetails({ product }) {
               <option value="evening">Evening (5 PM - 8 PM)</option>
               <option value="night">Night (9 PM Onwards)</option>
             </select>
+          </div>
+
+          {/* Message / Additional Requirements */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+              <Mail className="w-4 h-4 text-gray-400" />
+              Additional Message / Requirements
+            </label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows="3"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none"
+              placeholder="Tell us more about your event requirements..."
+            />
           </div>
 
           {/* Action Buttons */}

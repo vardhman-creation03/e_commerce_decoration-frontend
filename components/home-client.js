@@ -7,8 +7,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Star, Calendar, Users,
-  MapPin, Trophy, Sparkles, Heart, Quote,
-  CheckCircle2, TrendingUp, Leaf
+  MapPin, Trophy, Sparkles, Heart, Quote
 } from "lucide-react";
 import { eventService } from "../lib/services/eventService";
 import { blogService } from "../lib/services/blogService";
@@ -125,7 +124,7 @@ export default function Home() {
     <div className="w-full bg-gradient-to-b from-blue-50 via-green-50/30 to-white font-sans text-gray-700 overflow-x-hidden">
 
       {/* 1. HERO SECTION */}
-      <section className="relative py-24 lg:py-32 w-full bg-gradient-to-br from-blue-50 via-green-50/50 to-white">
+      <section className="relative py-16 lg:py-16 w-full bg-gradient-to-br from-blue-50 via-green-50/50 to-white">
         <div className="container mx-auto px-4 flex flex-col items-center justify-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
