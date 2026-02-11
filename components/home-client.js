@@ -115,8 +115,8 @@ export default function Home() {
   };
 
   const stats = [
-    { icon: <Sparkles className="w-5 h-5" />, value: "500+", label: "Events Managed", color: "text-green-500" },
-    { icon: <Users className="w-5 h-5" />, value: "450+", label: "Happy Clients", color: "text-emerald-500" },
+    { icon: <Sparkles className="w-5 h-5" />, value: "100+", label: "Events Managed", color: "text-green-500" },
+    { icon: <Users className="w-5 h-5" />, value: "80+", label: "Happy Clients", color: "text-emerald-500" },
     { icon: <MapPin className="w-5 h-5" />, value: "2", label: "Cities Covered", color: "text-teal-500" },
     { icon: <Trophy className="w-5 h-5" />, value: "5+", label: "Years Experience", color: "text-green-600" },
   ];
@@ -389,54 +389,57 @@ export default function Home() {
                     </Button>
                   </div>
 
-                  {/* Events Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {loadingOccasionEvents ? (
-                      [...Array(4)].map((_, i) => (
-                        <div key={i} className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-50 rounded-3xl animate-pulse" />
-                      ))
-                    ) : (
-                      eventsForOccasion.map((event, idx) => (
-                        <motion.div
-                          key={event._id || idx}
-                          initial="hidden"
-                          whileInView="visible"
-                          viewport={{ once: true }}
-                          variants={fadeInUp}
-                          transition={{ delay: idx * 0.1 }}
-                        >
-                          <Link href={`/events/view-detail?id=${event._id}`} className="group block">
-                            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden bg-gray-100 mb-5 shadow-md group-hover:shadow-2xl transition-all duration-500">
-                              <Image
-                                src={event.images?.[0] || "/placeholder.svg"}
-                                alt={event.title}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                              />
-                              <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold text-gray-900 shadow-lg">
-                                ₹{event.price?.toLocaleString()}
-                              </div>
-                              {event.originalPrice && event.originalPrice > event.price && (
-                                <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                  {Math.round(((event.originalPrice - event.price) / event.originalPrice) * 100)}% OFF
+                  {/* Events Grid - Horizontal scroll on mobile, grid on desktop */}
+                  <div className="lg:grid lg:grid-cols-4 lg:gap-8 -mx-4 lg:mx-0">
+                    <div className="flex lg:contents gap-4 sm:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-4 lg:px-0 lg:overflow-visible lg:gap-8">
+                      {loadingOccasionEvents ? (
+                        [...Array(4)].map((_, i) => (
+                          <div key={i} className="flex-shrink-0 w-[75vw] sm:w-[320px] lg:w-auto aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-50 rounded-3xl animate-pulse snap-center" />
+                        ))
+                      ) : (
+                        eventsForOccasion.map((event, idx) => (
+                          <motion.div
+                            key={event._id || idx}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={fadeInUp}
+                            transition={{ delay: idx * 0.1 }}
+                            className="flex-shrink-0 w-[75vw] sm:w-[320px] lg:w-auto snap-center"
+                          >
+                            <Link href={`/events/view-detail?id=${event._id}`} className="group block">
+                              <div className="relative aspect-[3/4] rounded-3xl overflow-hidden bg-gray-100 mb-4 shadow-md group-hover:shadow-2xl transition-all duration-500">
+                                <Image
+                                  src={event.images?.[0] || "/placeholder.svg"}
+                                  alt={event.title}
+                                  fill
+                                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
+                                <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs sm:text-sm font-bold text-gray-900 shadow-lg">
+                                  ₹{event.price?.toLocaleString()}
                                 </div>
-                              )}
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors line-clamp-1 mb-2">
-                              {event.title}
-                            </h3>
-                            <div className="flex items-center gap-2">
-                              <div className="flex text-amber-400">
-                                <Star className="w-4 h-4 fill-current" />
+                                {event.originalPrice && event.originalPrice > event.price && (
+                                  <div className="absolute top-3 left-3 bg-red-500 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-lg">
+                                    {Math.round(((event.originalPrice - event.price) / event.originalPrice) * 100)}% OFF
+                                  </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                               </div>
-                              <span className="text-sm font-semibold text-gray-600">{event.rating || 4.8}</span>
-                              <span className="text-sm text-gray-400">/ 5</span>
-                            </div>
-                          </Link>
-                        </motion.div>
-                      ))
-                    )}
+                              <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors line-clamp-1 mb-2">
+                                {event.title}
+                              </h3>
+                              <div className="flex items-center gap-2">
+                                <div className="flex text-amber-400">
+                                  <Star className="w-4 h-4 fill-current" />
+                                </div>
+                                <span className="text-sm font-semibold text-gray-600">{event.rating || 4.8}</span>
+                                <span className="text-sm text-gray-400">/ 5</span>
+                              </div>
+                            </Link>
+                          </motion.div>
+                        ))
+                      )}
+                    </div>
                   </div>
                 </div>
               );

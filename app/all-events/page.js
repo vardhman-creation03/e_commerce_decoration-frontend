@@ -29,7 +29,7 @@ const categories = [
   { label: "Ring Ceremony", value: "ring ceremony" },
   { label: "Car Decoration", value: "car decoration" },
   { label: "Kankotri Lekhan", value: "kankotri lekhan" },
-  { label: "First Night", value: "first night" },
+  { label: "Chathi Poojan", value: "chathi poojan" },
 ];
 
 // Items per page
