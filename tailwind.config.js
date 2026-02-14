@@ -3,17 +3,22 @@
 /** @type {import('tailwindcss').Config} */
 const config = {
   darkMode: ["class"],
+  // ✅ Comprehensive content paths for proper CSS purging
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./lib/**/*.{js,ts,jsx,tsx}",
+    "./helper/**/*.{js,ts,jsx,tsx}",
     "./*.{js,ts,jsx,tsx,mdx}"
   ],
-  // Minimal safelist - only classes that are dynamically generated and cannot be detected by static analysis
+  // ✅ Minimal safelist - only classes that are dynamically generated and cannot be detected by static analysis
   safelist: [
     'sr-only', // Accessibility class
   ],
+  // ✅ Enable CSS purging in production to remove unused styles
+  // Note: In Tailwind CSS v3+, 'purge' is replaced by 'content' above
+  // The content array above handles purging automatically
   theme: {
     extend: {
       colors: {

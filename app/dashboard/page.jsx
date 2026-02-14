@@ -118,13 +118,14 @@ export default function Dashboard() {
                         <CardContent className="p-6 flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500 mb-1">{stat.label}</p>
-                                <h3 className="text-3xl font-bold text-gray-900">
+                                {/* ✅ Fixed: Changed h3 to p for stats value (not a heading) */}
+                                <p className="text-3xl font-bold text-gray-900" aria-label={`${stat.value} ${stat.label}`}>
                                   {dashboardLoading ? (
                                     <div className="h-8 w-16 bg-gray-100 animate-pulse rounded" />
                                   ) : (
                                     stat.value
                                   )}
-                                </h3>
+                                </p>
                             </div>
                             <div className={`h-12 w-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center`}>
                                 <stat.icon className="h-6 w-6" />
@@ -235,7 +236,9 @@ export default function Dashboard() {
                                     <div className="h-16 w-16 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-4">
                                         <Calendar className="h-8 w-8 text-gray-300" />
                                     </div>
-                                    <h4 className="text-lg font-bold text-gray-900 mb-2">No Recent Activity</h4>
+                                    {/* ✅ Fixed: Changed h4 to h2 for proper heading hierarchy */}
+                                    {/* ✅ Fixed: Changed to h3 since it's under CardTitle (which acts as h2) */}
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">No Recent Activity</h3>
                                     <p className="text-gray-500 mb-6 text-sm">You haven't made any event inquiries yet.</p>
                                     <Link href="/all-events">
                                         <Button className="rounded-full bg-white border border-gray-200 text-gray-900 hover:bg-gray-50 shadow-sm">

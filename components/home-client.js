@@ -135,7 +135,7 @@ export default function Home() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border border-green-100">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-xs font-semibold tracking-widest uppercase text-green-600">
+              <span className="text-xs font-semibold tracking-widest uppercase text-green-700">
                 Premium Event Management & Decoration
               </span>
             </div>
@@ -208,7 +208,8 @@ export default function Home() {
                 <div className={`p-4 bg-white rounded-full shadow-sm mb-4 ${stat.color}`}>
                   {stat.icon}
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</h3>
+                {/* ✅ Fixed: Changed h3 to p for stats (not a heading, just a value) */}
+                <p className="text-3xl font-bold text-gray-900 mb-1" aria-label={`${stat.value} ${stat.label}`}>{stat.value}</p>
                 <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{stat.label}</p>
               </motion.div>
             ))}
@@ -220,7 +221,7 @@ export default function Home() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-600 mb-3">
+            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-700 mb-3">
               Curated Collections
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Browse by Occasion</h2>
@@ -281,7 +282,7 @@ export default function Home() {
       <section className="py-24 bg-gradient-to-b from-white to-green-50/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-600 mb-3">
+            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-700 mb-3">
               Client Favorites
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Trending This Season</h2>
@@ -341,7 +342,7 @@ export default function Home() {
         <section className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-600 mb-3">
+              <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-700 mb-3">
                 Browse by Occasion
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Events for Every Celebration</h2>
@@ -472,7 +473,8 @@ export default function Home() {
               variants={fadeInUp}
               className="p-8 rounded-3xl bg-white border-2 border-green-100 hover:border-green-300 hover:shadow-xl transition-all duration-500 text-center group"
             >
-              <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mb-6 text-white mx-auto shadow-lg group-hover:scale-110 transition-transform">
+              {/* ✅ Improved contrast: Using darker green for better text contrast */}
+              <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mb-6 text-white mx-auto shadow-lg group-hover:scale-110 transition-transform">
                 <Sparkles className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">Premium Quality</h3>
@@ -522,7 +524,7 @@ export default function Home() {
       <section className="py-24 bg-gradient-to-b from-green-50/30 to-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-20">
-            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-600 mb-3">
+            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-700 mb-3">
               Testimonials
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
@@ -549,11 +551,13 @@ export default function Home() {
                 <Quote className="w-10 h-10 text-green-200 mb-6" />
                 <p className="text-gray-700 mb-8 leading-relaxed text-lg">"{item.quote}"</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                  {/* ✅ Improved contrast: Using darker green background for better text contrast */}
+                  <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                     {item.name[0]}
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">{item.name}</h4>
+                    {/* ✅ Fixed: Changed h4 to h3 for proper heading hierarchy */}
+                    <h3 className="font-bold text-gray-900 text-base">{item.name}</h3>
                     <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold">{item.role}</span>
                   </div>
                 </div>
@@ -567,7 +571,7 @@ export default function Home() {
       <section className="py-24 bg-white pb-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-600 mb-3">
+            <span className="inline-block text-sm font-bold tracking-wider uppercase text-green-700 mb-3">
               Inspiration & Tips
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Latest Decoration Ideas</h2>

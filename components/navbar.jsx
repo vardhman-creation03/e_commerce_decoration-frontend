@@ -25,7 +25,6 @@ import {
   Menu,
   Settings,
   User,
-  ShoppingBag,
   Leaf,
 } from "lucide-react";
 import { useAuth } from "../lib/context/auth-context";
@@ -77,7 +76,8 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="w-11 h-11 flex items-center justify-center rounded-2xl bg-green-500 shadow-lg shadow-green-500/30 group-hover:shadow-xl group-hover:shadow-green-500/40 transition-all duration-300">
+              {/* ✅ Improved contrast: Using darker green for better text contrast */}
+              <div className="w-11 h-11 flex items-center justify-center rounded-2xl bg-green-600 shadow-lg shadow-green-600/30 group-hover:shadow-xl group-hover:shadow-green-600/40 transition-all duration-300">
                 <span className="font-bold text-lg text-white">VD</span>
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3">
@@ -88,7 +88,7 @@ export default function Navbar() {
               <span className="text-lg font-bold tracking-tight leading-none text-gray-900">
                 Vardhman
               </span>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-green-600 font-semibold">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-green-700 font-semibold">
                 Decoration
               </span>
             </div>
@@ -118,16 +118,6 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             {token ? (
               <div className="flex items-center gap-3">
-                 <Link href="/cart">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full hover:bg-green-50 text-gray-700 hover:text-green-600"
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                  </Button>
-                </Link>
-
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -136,7 +126,8 @@ export default function Navbar() {
                     >
                       <Avatar className="h-9 w-9">
                         <AvatarImage src={user?.profileImage} />
-                        <AvatarFallback className="bg-green-500 text-white font-bold text-sm">
+                        {/* ✅ Improved contrast: Using darker green for better text contrast */}
+                        <AvatarFallback className="bg-green-600 text-white font-bold text-sm">
                           {user?.fullName?.[0]?.toUpperCase() || "U"}
                         </AvatarFallback>
                       </Avatar>
@@ -188,20 +179,20 @@ export default function Navbar() {
 
           {/* Mobile Toggle */}
           <div className="md:hidden flex items-center gap-3">
-             {token && (
-                <Link href="/cart" className="text-gray-700">
-                  <ShoppingBag className="w-5 h-5" />
-                </Link>
-             )}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-gray-700">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-gray-700"
+                  aria-label="Open mobile menu"
+                >
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-full sm:w-[300px] p-0 border-l border-gray-200 flex flex-col">
                 <SheetHeader className="p-6 border-b border-gray-100 text-left bg-gradient-to-br from-green-50 to-emerald-50 shrink-0">
-                  <SheetTitle className="text-xl font-bold text-green-600">Menu</SheetTitle>
+                  <SheetTitle className="text-xl font-bold text-green-700">Menu</SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col h-full bg-white">
                   <div className="p-4 space-y-2">
@@ -229,7 +220,8 @@ export default function Navbar() {
                       <div className="flex items-center gap-3 mb-4 px-2">
                          <Avatar className="h-10 w-10 border-2 border-green-200">
                             <AvatarImage src={user?.profileImage} />
-                            <AvatarFallback className="bg-green-500 text-white font-bold">
+                            {/* ✅ Improved contrast: Using darker green for better text contrast */}
+                            <AvatarFallback className="bg-green-600 text-white font-bold">
                               {user?.fullName?.[0]}
                             </AvatarFallback>
                          </Avatar>

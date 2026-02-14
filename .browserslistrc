@@ -1,7 +1,7 @@
 # Target modern browsers only - no IE, no very old browsers
 # This reduces bundle size by not including unnecessary polyfills
-# All features listed in the audit (Array.at, Array.flat, Object.fromEntries, etc.)
-# are supported in these browser versions
+# All Baseline features (Array.at, Array.flat, Object.fromEntries, etc.)
+# are natively supported in these browser versions - NO POLYFILLS NEEDED
 
 # Modern browsers (last 2 versions of each)
 last 2 Chrome versions
@@ -9,13 +9,17 @@ last 2 Firefox versions
 last 2 Safari versions
 last 2 Edge versions
 
-# Minimum versions that support all Baseline features
+# Minimum versions that natively support all Baseline features without polyfills
+# Chrome 92+ supports: Array.at, Array.flat, Object.fromEntries, Object.hasOwn, String.trimStart/trimEnd
 Chrome >= 92
 Firefox >= 90
 Safari >= 15.4
 Edge >= 92
 
-# Mobile browsers
+# Mobile browsers with native ES6+ support
 iOS >= 15.4
 Android >= 92
 
+# Exclude very old browsers that would require polyfills
+not dead
+not op_mini all

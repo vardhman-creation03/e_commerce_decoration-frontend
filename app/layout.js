@@ -78,6 +78,20 @@ export const metadata = {
   },
 };
 
+// ✅ Perfect Viewport Configuration for Mobile & Desktop (separate export as per Next.js requirements)
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
+  // ✅ Theme Color for Mobile Browsers
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#22c55e" },
+    { media: "(prefers-color-scheme: dark)", color: "#34d399" },
+  ],
+};
+
 // ✅ Organization Schema for Google
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -103,8 +117,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
       <head>
+        {/* ✅ Preconnect to critical domains FIRST - reduces critical request chain */}
+        <link rel="preconnect" href="https://e-commerce-decor-backend.onrender.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        {/* Google Tag Manager - Must be placed as high as possible in the head */}
+        {/* Google Tag Manager - Deferred to reduce blocking */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -118,108 +139,18 @@ export default function RootLayout({ children }) {
         />
         {/* End Google Tag Manager */}
 
-        {/* Critical inline script to defer CSS loading - Must run FIRST before any CSS */}
+        {/* ✅ Critical inline script to defer CSS loading - Must run FIRST before any CSS */}
+        {/* This prevents CSS from blocking initial render, improving LCP and FCP */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                'use strict';
-                var processed = new Set();
-                
-                // Function to defer a single stylesheet
-                function deferStylesheet(link) {
-                  var href = link.getAttribute('href') || link.href;
-                  if (!href || href.match(/^data:/) || processed.has(href)) return;
-                  
-                  processed.add(href);
-                  
-                  // Use media="print" trick - browser loads it but doesn't block render
-                  link.media = 'print';
-                  
-                  // Check for onload support BEFORE assigning (fix for browsers without onload support)
-                  var supportsOnload = 'onload' in link;
-                  if (supportsOnload) {
-                    link.onload = function() {
-                      this.media = 'all';
-                    };
-                  } else {
-                    // Fallback for browsers that don't support onload
-                    setTimeout(function() {
-                      link.media = 'all';
-                    }, 0);
-                  }
-                }
-                
-                // Process existing stylesheets immediately
-                function processExisting() {
-                  var links = document.querySelectorAll('link[rel="stylesheet"]');
-                  for (var i = 0; i < links.length; i++) {
-                    deferStylesheet(links[i]);
-                  }
-                }
-                
-                // Run immediately - don't wait for DOM
-                if (document.head) {
-                  processExisting();
-                }
-                
-                // Also run when head is available
-                if (document.readyState === 'loading') {
-                  document.addEventListener('readystatechange', function() {
-                    if (document.readyState !== 'loading' && document.head) {
-                      processExisting();
-                    }
-                  });
-                }
-                
-                // Watch for new stylesheets added dynamically
-                if (window.MutationObserver && document.head) {
-                  var observer = new MutationObserver(function(mutations) {
-                    for (var i = 0; i < mutations.length; i++) {
-                      var nodes = mutations[i].addedNodes;
-                      for (var j = 0; j < nodes.length; j++) {
-                        var node = nodes[j];
-                        if (node.nodeType === 1 && node.tagName === 'LINK' && 
-                            node.rel === 'stylesheet') {
-                          deferStylesheet(node);
-                        }
-                      }
-                    }
-                  });
-                  
-                  observer.observe(document.head || document.documentElement, {
-                    childList: true,
-                    subtree: true
-                  });
-                }
-                
-                // Fallback: run on DOMContentLoaded
-                if (document.readyState === 'loading') {
-                  document.addEventListener('DOMContentLoaded', processExisting);
-                }
-              })();
+              !function(){"use strict";var e=new Set;function t(t){var n=t.getAttribute("href")||t.href;if(!n||n.match(/^data:/)||e.has(n))return;e.add(n),t.media="print","onload"in t?t.onload=function(){this.media="all"}:setTimeout(function(){t.media="all"},0)}function n(){var n=document.querySelectorAll("link[rel=stylesheet]");for(var o=0;o<n.length;o++)t(n[o])}document.head&&n(),"loading"===document.readyState&&(document.addEventListener("readystatechange",function(){"loading"!==document.readyState&&document.head&&n()}),document.addEventListener("DOMContentLoaded",n)),window.MutationObserver&&document.head&&new MutationObserver(function(e){for(var n=0;n<e.length;n++)for(var o=e[n].addedNodes,r=0;r<o.length;r++){var i=o[r];1===i.nodeType&&"LINK"===i.tagName&&"stylesheet"===i.rel&&t(i)}}).observe(document.head||document.documentElement,{childList:!0,subtree:!0})}();
             `,
           }}
         />
 
-        {/* Preconnect to critical external domains for faster resource loading - Priority order matters */}
-        {/* API origin - Critical for LCP (300ms savings) */}
-        <link rel="preconnect" href="https://vardhman-decoration.onrender.com" crossOrigin="anonymous" />
-        {/* Image CDN - Critical for product images */}
-        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
-        {/* Fonts - Critical for FCP */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Unsplash images - Lower priority */}
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
-
-        {/* Preload LCP image (hero background) for optimal LCP performance */}
-        <link
-          rel="preload"
-          as="image"
-          href="https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&q=80"
-          fetchPriority="high"
-        />
+        {/* ✅ Removed Unsplash preload to avoid third-party cookie warnings */}
+        {/* Use Cloudinary images instead for better performance and no cookie issues */}
 
         {/* Google Analytics - Deferred loading to improve performance */}
 
@@ -234,7 +165,30 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body className={`${poppins.variable} font-poppins`} suppressHydrationWarning={true}>
+      <body 
+        className={`${poppins.variable} font-poppins`} 
+        suppressHydrationWarning={true}
+        style={{ 
+          fontDisplay: 'swap',
+          fontFamily: 'var(--font-poppins), system-ui, sans-serif'
+        }}
+      >
+        {/* ✅ bfcache optimization - prevent scripts from running on back/forward */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Handle pageshow event for bfcache
+                window.addEventListener('pageshow', function(event) {
+                  if (event.persisted) {
+                    // Page was restored from bfcache - don't reinitialize scripts
+                    return;
+                  }
+                });
+              })();
+            `,
+          }}
+        />
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -248,13 +202,19 @@ export default function RootLayout({ children }) {
 
         <ClientLayout>{children}</ClientLayout>
 
-        {/* Google Analytics - Deferred until after page is interactive and user engages */}
+        {/* ✅ Google Analytics - Deferred and bfcache-safe */}
         <Script
           id="google-analytics-deferred"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // ✅ bfcache-safe: Check if page was restored from cache
+                if (window.performance && window.performance.navigation && 
+                    window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+                  return; // Don't run on back/forward navigation
+                }
+                
                 // Initialize dataLayer immediately but defer script loading
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

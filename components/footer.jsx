@@ -21,7 +21,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-white border-t border-gray-100">
+    <footer className="bg-white border-t border-gray-100" style={{ minHeight: '300px' }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Footer Content */}
@@ -35,7 +35,7 @@ export default function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-semibold text-gray-900">Vardhman</span>
-                <span className="text-[10px] uppercase tracking-wider text-green-600 font-medium">Decoration</span>
+                <span className="text-[10px] uppercase tracking-wider text-green-700 font-medium">Decoration</span>
               </div>
             </Link>
             
