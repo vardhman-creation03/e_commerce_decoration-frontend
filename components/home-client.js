@@ -598,7 +598,7 @@ export default function Home() {
                   variants={fadeInUp}
                   transition={{ delay: idx * 0.1 }}
                 >
-                  <Link href={`/blogs/${blog.slug || blog._id}`} className="group block h-full">
+                  <Link href={blog.slug ? `/blogs/${blog.slug}` : `/blogs/${blog._id || blog.id}`} className="group block h-full">
                     <div className="bg-white border-2 border-gray-100 rounded-3xl overflow-hidden h-full hover:shadow-xl hover:border-green-200 transition-all duration-300">
                       <div className="relative aspect-[16/10] bg-gray-100">
                         <Image

@@ -90,7 +90,8 @@ export default function BlogDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
-  const slug = params?.slug;
+  // Extract slug from params - handle both string and array cases
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
 
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -104,13 +105,41 @@ export default function BlogDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const result = await blogService.getBlogPost(slug);
-        // Handle API response structure: { success, message, blogPost } or { blog, data, ... }
+        // Decode slug in case it's URL encoded, with error handling
+        let decodedSlug = slug;
+        try {
+          decodedSlug = decodeURIComponent(slug);
+        } catch (e) {
+          // If decoding fails, use the original slug
+          decodedSlug = slug;
+        }
+        // Trim and clean the slug
+        decodedSlug = decodedSlug.trim();
+        
+        const result = await blogService.getBlogPost(decodedSlug);
+        
+        // Handle API response structure: { success, message, blogPost }
+        if (result.success === false) {
+          setError(result.message || "The blog post you are looking for does not exist or has been removed.");
+          setSelectedBlog(null);
+          return;
+        }
+        
+        // Extract blog data from response
         const blogData = result.blogPost || result.blog || result.data || result;
+        
+        if (!blogData || (!blogData._id && !blogData.id)) {
+          setError("The blog post you are looking for does not exist or has been removed.");
+          setSelectedBlog(null);
+          return;
+        }
+        
         setSelectedBlog(blogData);
       } catch (err) {
         console.error("Error fetching blog detail:", err);
-        setError("The blog post you are looking for does not exist or has been removed.");
+        const errorMessage = err.response?.data?.message || err.message || "The blog post you are looking for does not exist or has been removed.";
+        setError(errorMessage);
+        setSelectedBlog(null);
       } finally {
         setLoading(false);
       }
