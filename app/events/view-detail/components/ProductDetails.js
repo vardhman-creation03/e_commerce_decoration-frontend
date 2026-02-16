@@ -72,7 +72,10 @@ export default function ProductDetails({ product }) {
         bookingDate: formData.partyDate,
         bookingTime: formData.partyTime,
         eventLocation: formData.location,
-        paymentMode: "Online"
+        paymentMode: "Online",
+        fullName: formData.fullName,
+        mobile: formData.phone,
+        email: formData.email
       };
 
       const result = await dispatch(createBooking(bookingData)).unwrap();
@@ -89,12 +92,17 @@ export default function ProductDetails({ product }) {
           localStorage.setItem("OrderId", result.booking._id);
           localStorage.setItem("orderSummary", JSON.stringify(orderSummary));
           localStorage.setItem("userMobile", formData.phone);
+          localStorage.setItem("userName", formData.fullName);
+          localStorage.setItem("userEmail", formData.email);
           // Store event specific info for the payment page
           localStorage.setItem("bookingDetails", JSON.stringify({
             eventName: product.title,
             date: formData.partyDate,
             time: formData.partyTime,
-            location: formData.location
+            location: formData.location,
+            fullName: formData.fullName,
+            mobile: formData.phone,
+            email: formData.email
           }));
         }
 

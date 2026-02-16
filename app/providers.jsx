@@ -1,15 +1,17 @@
 'use client';
 
-import { AuthProvider } from '../lib/context/auth-context';
+// ==========================================
+// PROVIDERS - Simplified (No Auth)
+// ==========================================
+// All authentication removed - only Redux provider needed
+
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 
 export default function Providers({ children }) {
   return (
     <Provider store={store}>
-      <AuthProvider>
-        {children}
-      </AuthProvider>
+      {children}
     </Provider>
   );
 }

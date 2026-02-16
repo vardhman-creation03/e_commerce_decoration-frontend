@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/context/auth-context';
 import { Bell, Search, LogOut, User } from 'lucide-react';
 import {
   DropdownMenu,
@@ -14,21 +13,21 @@ import {
 
 export default function AdminHeader() {
   const router = useRouter();
-  const { user, logout } = useAuth();
   const [userName, setUserName] = useState('Admin');
 
   useEffect(() => {
-    if (user?.name) {
-      setUserName(user.name);
-    } else {
-      const name = localStorage.getItem('userName') || 'Admin';
-      setUserName(name);
-    }
-  }, [user]);
+    // Get admin name from localStorage (set during admin login or URL password)
+    const name = typeof window !== 'undefined' ? localStorage.getItem('userName') || 'Admin' : 'Admin';
+    setUserName(name);
+  }, []);
 
   const handleLogout = () => {
-    logout();
-    router.push('/login');
+    // Clear admin session
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('admin_password');
+      localStorage.removeItem('userName');
+    }
+    router.push('/');
   };
 
   return (

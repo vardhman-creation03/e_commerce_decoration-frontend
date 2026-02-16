@@ -64,9 +64,10 @@ export const clearCart = createAsyncThunk(
 
 export const checkoutCart = createAsyncThunk(
     'cart/checkoutCart',
-    async (paymentMode, { rejectWithValue }) => {
+    async (checkoutData, { rejectWithValue }) => {
         try {
-            const data = await cartService.checkoutCart(paymentMode);
+            // checkoutData should include: paymentMode, fullName, mobile, email, address (optional)
+            const data = await cartService.checkoutCart(checkoutData);
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message);

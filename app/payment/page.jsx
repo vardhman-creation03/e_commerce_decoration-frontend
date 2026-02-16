@@ -232,16 +232,7 @@ export default function PaymentPage() {
         return;
       }
 
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      if (!token) {
-        toast({
-          title: "Error",
-          description: "Authentication token not found. Please log in and try again.",
-          variant: "destructive",
-        });
-        setTimeout(() => router.push("/login"), 1500);
-        return;
-      }
+      // No authentication required - all payments are public
 
       const amountInPaise = Math.round(orderSummary.total * 100);
 
@@ -358,11 +349,7 @@ export default function PaymentPage() {
 
   const handleCancelOrder = async () => {
     // Logic to cancel order if needed, or just redirect back
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if(!token) {
-        router.push("/all-events");
-        return;
-    }
+    // No authentication required - all operations are public
 
     try {
         if(orderId) {

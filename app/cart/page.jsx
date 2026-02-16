@@ -149,12 +149,50 @@ export default function CartPage() {
       return;
     }
 
+    // Get user info from localStorage (from previous bookings or payment page)
+    // If not available, get from bookingDetails stored during event booking
+    let fullName = typeof window !== 'undefined' ? localStorage.getItem('userName') : null;
+    let mobile = typeof window !== 'undefined' ? localStorage.getItem('userMobile') : null;
+    let email = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
+
+    // Try to get from bookingDetails if available
+    if (!fullName || !mobile || !email) {
+      const bookingDetails = typeof window !== 'undefined' ? localStorage.getItem('bookingDetails') : null;
+      if (bookingDetails) {
+        try {
+          const details = JSON.parse(bookingDetails);
+          if (!fullName && details.fullName) fullName = details.fullName;
+          if (!mobile && details.mobile) mobile = details.mobile;
+          if (!email && details.email) email = details.email;
+        } catch (e) {
+          console.error('Failed to parse bookingDetails', e);
+        }
+      }
+    }
+
+    // If still missing, show error (in production, you'd show a form)
+    if (!fullName || !mobile || !email) {
+      toast({
+        title: "Contact Information Required",
+        description: "Please complete a booking first to save your contact information, or contact support.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsProcessing(true);
     dispatch(resetPaymentState());
 
     try {
-      // Convert cart to bookings
-      const checkoutResult = await dispatch(checkoutCart('Online')).unwrap();
+      // Convert cart to bookings with user info
+      const checkoutData = {
+        paymentMode: 'Online',
+        fullName,
+        mobile,
+        email,
+        // address is optional
+      };
+      const checkoutResult = await dispatch(checkoutCart(checkoutData)).unwrap();
       
       if (!checkoutResult.bookings || checkoutResult.bookings.length === 0) {
         throw new Error('Failed to create bookings');

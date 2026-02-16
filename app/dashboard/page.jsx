@@ -3,12 +3,11 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, Calendar, Clock, ArrowRight, Sparkles, MapPin, CheckCircle } from 'lucide-react';
-import { useAuth } from '@/lib/context/auth-context';
+import { Calendar, Clock, ArrowRight, Sparkles, MapPin, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserDashboardStats } from '../store/userSlice';
+import { getBookingsByContact } from '../store/userSlice';
 
 // Animation variants
 const fadeIn = {
@@ -27,32 +26,47 @@ const staggerContainer = {
 };
 
 export default function Dashboard() {
-  const { user } = useAuth();
   const dispatch = useDispatch();
-  const { dashboardStats, dashboardLoading } = useSelector((state) => state.user);
+  const { bookings, loading } = useSelector((state) => state.user);
 
+  // Get bookings by contact info from localStorage or prompt user
   useEffect(() => {
-    dispatch(getUserDashboardStats());
+    if (typeof window !== 'undefined') {
+      const savedMobile = localStorage.getItem('userMobile');
+      const savedEmail = localStorage.getItem('userEmail');
+      
+      if (savedMobile || savedEmail) {
+        dispatch(getBookingsByContact({ mobile: savedMobile, email: savedEmail }));
+      }
+    }
   }, [dispatch]);
+
+  // Calculate stats from bookings
+  const totalEvents = bookings?.length || 0;
+  const upcomingEvents = bookings?.filter(b => {
+    if (!b.bookingDate) return false;
+    return new Date(b.bookingDate) > new Date();
+  }).length || 0;
+  const completedEvents = bookings?.filter(b => b.bookingStatus === 'Completed').length || 0;
 
   const stats = [
     { 
       label: "Total Events", 
-      value: dashboardStats?.stats?.totalEvents || "0", 
+      value: totalEvents, 
       icon: Calendar, 
       color: "text-blue-600", 
       bg: "bg-blue-50" 
     },
     { 
       label: "Upcoming", 
-      value: dashboardStats?.stats?.upcomingEvents || "0", 
+      value: upcomingEvents, 
       icon: Clock, 
       color: "text-orange-600", 
       bg: "bg-orange-50" 
     },
     { 
       label: "Completed", 
-      value: dashboardStats?.stats?.completedEvents || "0", 
+      value: completedEvents, 
       icon: CheckCircle, 
       color: "text-green-600", 
       bg: "bg-green-50" 
@@ -66,6 +80,10 @@ export default function Dashboard() {
       day: "numeric",
     });
   };
+
+  // Get user info from localStorage
+  const userName = typeof window !== 'undefined' ? localStorage.getItem('userName') || 'Guest' : 'Guest';
+  const userEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') || 'No email provided' : 'No email provided';
 
   return (
     <div className="min-h-screen bg-gray-50/30 font-sans">
@@ -83,10 +101,10 @@ export default function Dashboard() {
           >
             <motion.div variants={fadeIn} className="text-center md:text-left space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100/50 text-green-700 text-xs font-semibold uppercase tracking-wider mb-4 border border-green-200">
-                <Sparkles className="w-3 h-3" /> User Dashboard
+                <Sparkles className="w-3 h-3" /> Booking Dashboard
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
-                Hello, {user?.name?.split(' ')[0] || 'User'}!
+                Hello, {userName.split(' ')[0]}!
               </h1>
               <p className="text-lg text-gray-500 max-w-lg font-light">
                 Here's an overview of your event planning journey with us.
@@ -118,9 +136,8 @@ export default function Dashboard() {
                         <CardContent className="p-6 flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500 mb-1">{stat.label}</p>
-                                {/* ✅ Fixed: Changed h3 to p for stats value (not a heading) */}
                                 <p className="text-3xl font-bold text-gray-900" aria-label={`${stat.value} ${stat.label}`}>
-                                  {dashboardLoading ? (
+                                  {loading ? (
                                     <div className="h-8 w-16 bg-gray-100 animate-pulse rounded" />
                                   ) : (
                                     stat.value
@@ -147,30 +164,18 @@ export default function Dashboard() {
                         <CardContent className="p-6 space-y-6">
                             <div className="flex flex-col items-center justify-center text-center">
                                 <div className="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center mb-4 border-4 border-white shadow-md text-3xl font-bold text-green-600">
-                                    {user?.name?.charAt(0) || "U"}
+                                    {userName.charAt(0).toUpperCase() || "G"}
                                 </div>
-                                <h3 className="text-lg font-bold text-gray-900">{user?.name || "Guest User"}</h3>
-                                <p className="text-gray-500">{user?.email || "No email provided"}</p>
+                                <h3 className="text-lg font-bold text-gray-900">{userName}</h3>
+                                <p className="text-gray-500">{userEmail}</p>
                             </div>
                             
                             <div className="space-y-3 pt-4 border-t border-gray-100">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-500">Member Since</span>
-                                    <span className="font-medium text-gray-900">
-                                      {dashboardStats?.memberSince ? formatDate(dashboardStats.memberSince) : "N/A"}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between text-sm">
                                     <span className="text-gray-500">Account Type</span>
-                                    <span className="font-medium text-gray-900">{user?.role || "Personal"}</span>
+                                    <span className="font-medium text-gray-900">Guest</span>
                                 </div>
                             </div>
-                            
-                            <Link href="/profile" className="block">
-                                <Button variant="outline" className="w-full rounded-xl border-gray-200 hover:bg-green-50 hover:text-green-600 hover:border-green-200">
-                                    Manage Profile
-                                </Button>
-                            </Link>
                         </CardContent>
                     </Card>
                 </motion.div>
@@ -183,48 +188,50 @@ export default function Dashboard() {
                         <CardHeader className="bg-white border-b border-gray-100 p-6 flex flex-row items-center justify-between sticky top-0">
                              <div>
                                 <CardTitle className="text-xl font-bold text-gray-900">Recent Activity</CardTitle>
-                                <CardDescription>Track the status of your event requests</CardDescription>
+                                <CardDescription>Track the status of your event bookings</CardDescription>
                              </div>
-                             <Link href="/events">
+                             <Link href="/all-events">
                                 <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-700 hover:bg-green-50 rounded-full">
                                     View All <ArrowRight className="ml-1 w-4 h-4" />
                                 </Button>
                              </Link>
                         </CardHeader>
                         <CardContent className="p-0 flex-1 bg-gray-50/30">
-                            {dashboardLoading ? (
+                            {loading ? (
                                 <div className="p-8 space-y-4">
                                     {[1, 2, 3].map((i) => (
                                         <div key={i} className="h-20 bg-gray-200 animate-pulse rounded-2xl" />
                                     ))}
                                 </div>
-                            ) : dashboardStats?.recentActivity && dashboardStats.recentActivity.length > 0 ? (
+                            ) : bookings && bookings.length > 0 ? (
                                 <div className="divide-y divide-gray-100">
-                                    {dashboardStats.recentActivity.map((activity) => (
-                                        <div key={activity._id} className="p-6 hover:bg-white transition-colors duration-200 flex items-start gap-4">
-                                            <div className={`mt-1 h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${activity.type === 'Booking' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
-                                                {activity.type === 'Booking' ? <Calendar className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
+                                    {bookings.map((booking) => (
+                                        <div key={booking._id} className="p-6 hover:bg-white transition-colors duration-200 flex items-start gap-4">
+                                            <div className="mt-1 h-10 w-10 rounded-full flex items-center justify-center shrink-0 bg-blue-100 text-blue-600">
+                                                <Calendar className="h-5 w-5" />
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex justify-between items-start">
                                                      <div>
-                                                        <h4 className="text-base font-semibold text-gray-900 truncate pr-4">{activity.title}</h4>
+                                                        <h4 className="text-base font-semibold text-gray-900 truncate pr-4">
+                                                          {booking.eventSnapshot?.title || booking.event?.title || 'Event Booking'}
+                                                        </h4>
                                                         <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                                                            <Clock className="w-3 h-3" /> {formatDate(activity.date)}
-                                                            {activity.details && (
+                                                            <Clock className="w-3 h-3" /> {formatDate(booking.bookingDate || booking.createdAt)}
+                                                            {booking.eventLocation && (
                                                                 <>
                                                                     <span className="w-1 h-1 rounded-full bg-gray-300" />
-                                                                    <MapPin className="w-3 h-3" /> {activity.details}
+                                                                    <MapPin className="w-3 h-3" /> {booking.eventLocation}
                                                                 </>
                                                             )}
                                                         </p>
                                                      </div>
                                                      <div className={`px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wide ${
-                                                         activity.status.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700' :
-                                                         activity.status.toLowerCase() === 'confirmed' ? 'bg-blue-100 text-blue-700' :
+                                                         booking.bookingStatus?.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700' :
+                                                         booking.bookingStatus?.toLowerCase() === 'confirmed' ? 'bg-blue-100 text-blue-700' :
                                                          'bg-yellow-100 text-yellow-700'
                                                      }`}>
-                                                         {activity.status}
+                                                         {booking.bookingStatus || 'Pending'}
                                                      </div>
                                                 </div>
                                             </div>
@@ -236,10 +243,8 @@ export default function Dashboard() {
                                     <div className="h-16 w-16 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-4">
                                         <Calendar className="h-8 w-8 text-gray-300" />
                                     </div>
-                                    {/* ✅ Fixed: Changed h4 to h2 for proper heading hierarchy */}
-                                    {/* ✅ Fixed: Changed to h3 since it's under CardTitle (which acts as h2) */}
                                     <h3 className="text-lg font-bold text-gray-900 mb-2">No Recent Activity</h3>
-                                    <p className="text-gray-500 mb-6 text-sm">You haven't made any event inquiries yet.</p>
+                                    <p className="text-gray-500 mb-6 text-sm">You haven't made any event bookings yet.</p>
                                     <Link href="/all-events">
                                         <Button className="rounded-full bg-white border border-gray-200 text-gray-900 hover:bg-gray-50 shadow-sm">
                                             Browse Services

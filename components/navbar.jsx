@@ -4,15 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "../components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -21,20 +12,14 @@ import {
   SheetTrigger,
 } from "../components/ui/sheet";
 import {
-  LogOut,
   Menu,
-  Settings,
-  User,
   Leaf,
 } from "lucide-react";
-import { useAuth } from "../lib/context/auth-context";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  const { user, token, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,11 +29,6 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleLogout = () => {
-    logout();
-    setIsMobileMenuOpen(false);
-  };
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -114,67 +94,9 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Desktop Actions */}
+          {/* Desktop Actions - All public, no auth required */}
           <div className="hidden md:flex items-center gap-3">
-            {token ? (
-              <div className="flex items-center gap-3">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="rounded-full p-0 h-10 w-10 border-2 border-gray-200 hover:border-green-400 transition-all"
-                    >
-                      <Avatar className="h-9 w-9">
-                        <AvatarImage src={user?.profileImage} />
-                        {/* ✅ Improved contrast: Using darker green for better text contrast */}
-                        <AvatarFallback className="bg-green-600 text-white font-bold text-sm">
-                          {user?.fullName?.[0]?.toUpperCase() || "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 mt-2 p-2">
-                    <DropdownMenuLabel className="font-normal text-xs text-gray-500 p-2">
-                      Signed in as <br/> <span className="text-gray-900 font-semibold text-sm">{user?.email}</span>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
-                      <Link href="/dashboard">
-                        <User className="mr-2 h-4 w-4" /> Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
-                      <Link href="/profile">
-                        <Settings className="mr-2 h-4 w-4" /> Settings
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      className="cursor-pointer rounded-lg text-red-600 focus:text-red-700 focus:bg-red-50"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" /> Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  asChild
-                  className="font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-                >
-                  <Link href="/login">Sign In</Link>
-                </Button>
-                <Button
-                  asChild
-                  className="rounded-full px-6 font-semibold bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all duration-300"
-                >
-                  <Link href="/register">Get Started</Link>
-                </Button>
-              </div>
-            )}
+            {/* All features are public - no login/register needed */}
           </div>
 
           {/* Mobile Toggle */}
@@ -213,50 +135,9 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                {/* Fixed bottom section with auth buttons */}
+                {/* Mobile menu footer - All public, no auth required */}
                 <div className="shrink-0 p-6 border-t border-gray-100 bg-gray-50">
-                  {token ? (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3 mb-4 px-2">
-                         <Avatar className="h-10 w-10 border-2 border-green-200">
-                            <AvatarImage src={user?.profileImage} />
-                            {/* ✅ Improved contrast: Using darker green for better text contrast */}
-                            <AvatarFallback className="bg-green-600 text-white font-bold">
-                              {user?.fullName?.[0]}
-                            </AvatarFallback>
-                         </Avatar>
-                         <div>
-                           <p className="text-sm font-bold text-gray-900">{user?.fullName || "User"}</p>
-                           <p className="text-xs text-gray-500 truncate max-w-[150px]">{user?.email}</p>
-                         </div>
-                      </div>
-                      <Button asChild variant="outline" className="w-full justify-start rounded-xl border-gray-200">
-                        <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                          <User className="mr-2 h-4 w-4" /> Dashboard
-                        </Link>
-                      </Button>
-                      <Button
-                        onClick={handleLogout}
-                        variant="ghost"
-                        className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl"
-                      >
-                        <LogOut className="mr-2 h-4 w-4" /> Sign Out
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button variant="outline" asChild className="rounded-xl w-full border-gray-300 font-semibold">
-                        <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                          Sign In
-                        </Link>
-                      </Button>
-                      <Button asChild className="rounded-xl w-full bg-green-500 text-white hover:bg-green-600 font-semibold">
-                        <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                          Sign Up
-                        </Link>
-                      </Button>
-                    </div>
-                  )}
+                  {/* All features are public - no login/register needed */}
                 </div>
               </SheetContent>
             </Sheet>
