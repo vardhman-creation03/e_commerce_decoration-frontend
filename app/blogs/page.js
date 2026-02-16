@@ -84,13 +84,18 @@ export default function BlogsPage() {
 
       const data = await blogService.getAllBlogPosts(params);
 
-      const blogList = Array.isArray(data) ? data : (data?.blogs || data?.data || []);
+      // Handle API response structure: { success, message, blogPosts, pagination }
+      const blogList = Array.isArray(data) 
+        ? data 
+        : (data?.blogPosts || data?.blogs || data?.data || []);
+      
       const paginationData = data?.pagination || {
-        currentPage: data?.currentPage || currentPage,
-        totalPages: data?.totalPages || 1,
-        totalPosts: data?.totalPosts || blogList.length,
-        hasNextPage: data?.hasNextPage || false,
-        hasPrevPage: data?.hasPrevPage || false
+        currentPage: data?.currentPage || data?.pagination?.currentPage || currentPage,
+        totalPages: data?.totalPages || data?.pagination?.totalPages || 1,
+        totalPosts: data?.totalPosts || data?.pagination?.totalPosts || blogList.length,
+        limit: data?.limit || data?.pagination?.limit || limit,
+        hasNextPage: data?.hasNextPage !== undefined ? data.hasNextPage : (data?.pagination?.hasNextPage || false),
+        hasPrevPage: data?.hasPrevPage !== undefined ? data.hasPrevPage : (data?.pagination?.hasPrevPage || false)
       };
 
       setBlogs(blogList);

@@ -105,7 +105,8 @@ export default function BlogDetailPage() {
       setError(null);
       try {
         const result = await blogService.getBlogPost(slug);
-        const blogData = result.blog || result.data || result;
+        // Handle API response structure: { success, message, blogPost } or { blog, data, ... }
+        const blogData = result.blogPost || result.blog || result.data || result;
         setSelectedBlog(blogData);
       } catch (err) {
         console.error("Error fetching blog detail:", err);
@@ -128,7 +129,10 @@ export default function BlogDetailPage() {
           category: selectedBlog.category,
           limit: 4
         });
-        const list = Array.isArray(result) ? result : (result?.blogs || result?.data || []);
+        // Handle API response structure: { success, message, blogPosts, pagination }
+        const list = Array.isArray(result) 
+          ? result 
+          : (result?.blogPosts || result?.blogs || result?.data || []);
         const filtered = list.filter(b => (b._id || b.id) !== (selectedBlog._id || selectedBlog.id)).slice(0, 3);
         setRelatedBlogs(filtered);
       } catch (err) {

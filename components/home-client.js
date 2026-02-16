@@ -57,7 +57,10 @@ export default function Home() {
           setEvents(list.slice(0, 4));
         }
         if (blogsData.status === 'fulfilled') {
-          const list = Array.isArray(blogsData.value) ? blogsData.value : (blogsData.value?.blogs || blogsData.value?.data || []);
+          // Handle API response structure: { success, message, blogPosts, pagination }
+          const list = Array.isArray(blogsData.value) 
+            ? blogsData.value 
+            : (blogsData.value?.blogPosts || blogsData.value?.blogs || blogsData.value?.data || []);
           setBlogs(list.slice(0, 3));
         }
         if (occasionsData.status === 'fulfilled') {
