@@ -55,7 +55,8 @@ const accentVariants = {
 };
 
 export default function VardhmanLoader() {
-  const brandName = "Vardhman Decoration".split("");
+  const word1 = "Vardhman";
+  const word2 = "Decoration";
 
   return (
     <motion.div
@@ -69,28 +70,44 @@ export default function VardhmanLoader() {
       <div className="relative">
         {/* Decorative accent dots - Green */}
         <motion.div
-          className="absolute -left-8 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500/60"
+          className="absolute -left-4 sm:-left-8 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500/60"
           variants={accentVariants}
         />
         <motion.div
-          className="absolute -right-8 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500/60"
+          className="absolute -right-4 sm:-right-8 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500/60"
           variants={accentVariants}
         />
 
         {/* Brand Name - Faster animation */}
-        <div className="flex items-center space-x-1 sm:space-x-1.5">
-          {brandName.map((letter, index) => (
-            <motion.span
-              key={index}
-              className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight"
-              custom={index}
-              initial="hidden"
-              animate="visible"
-              variants={letterVariants}
-            >
-              {letter === " " ? "\u00A0" : letter}
-            </motion.span>
-          ))}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+          <div className="flex items-center space-x-0.5 sm:space-x-1">
+            {word1.split("").map((letter, index) => (
+              <motion.span
+                key={index}
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight"
+                custom={index}
+                initial="hidden"
+                animate="visible"
+                variants={letterVariants}
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </div>
+          <div className="flex items-center space-x-0.5 sm:space-x-1">
+            {word2.split("").map((letter, index) => (
+              <motion.span
+                key={index}
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight"
+                custom={index + word1.length}
+                initial="hidden"
+                animate="visible"
+                variants={letterVariants}
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </div>
         </div>
       </div>
 

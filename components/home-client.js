@@ -36,10 +36,7 @@ export default function Home() {
 
   const serviceTags = [
     "Birthday Decoration", "Anniversary Decoration", "Baby Shower Decoration",
-    "Car Decoration", "First Night Decoration", "Welcome Baby Decoration",
-    "Bon Voyage Decoration", "Wedding Decoration (Haldi, Mehndi, Kankotri)",
-    "Naming Ceremony", "Mundan Decoration", "Annaprashan Decoration",
-    "Artificial Flower Decoration", "Real Flower Decoration"
+    "Car Decoration", "Welcome Baby Decoration", "Mundan Decoration", "Annaprashan Decoration", "Artificial Flower Decoration", "Real Flower Decoration"
   ];
 
   // Fetch Data
@@ -58,8 +55,8 @@ export default function Home() {
         }
         if (blogsData.status === 'fulfilled') {
           // Handle API response structure: { success, message, blogPosts, pagination }
-          const list = Array.isArray(blogsData.value) 
-            ? blogsData.value 
+          const list = Array.isArray(blogsData.value)
+            ? blogsData.value
             : (blogsData.value?.blogPosts || blogsData.value?.blogs || blogsData.value?.data || []);
           setBlogs(list.slice(0, 3));
         }
@@ -127,7 +124,7 @@ export default function Home() {
     <div className="w-full bg-gradient-to-b from-blue-50 via-green-50/30 to-white font-sans text-gray-700 overflow-x-hidden">
 
       {/* 1. HERO SECTION */}
-      <section className="relative py-16 lg:py-16 w-full bg-gradient-to-br from-blue-50 via-green-50/50 to-white">
+      <section className="relative py-12 lg:py-12 w-full bg-gradient-to-br from-blue-50 via-green-50/50 to-white">
         <div className="container mx-auto px-4 flex flex-col items-center justify-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -200,20 +197,20 @@ export default function Home() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8"
           >
             {stats.map((stat, idx) => (
               <motion.div
                 key={idx}
                 variants={fadeInUp}
-                className="flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-lg hover:border-green-200 transition-all duration-300"
+                className="flex flex-col items-center justify-center p-3 sm:p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-lg hover:border-green-200 transition-all duration-300"
               >
-                <div className={`p-4 bg-white rounded-full shadow-sm mb-4 ${stat.color}`}>
+                <div className={`p-3 sm:p-4 bg-white rounded-full shadow-sm mb-2 sm:mb-4 ${stat.color}`}>
                   {stat.icon}
                 </div>
                 {/* ✅ Fixed: Changed h3 to p for stats (not a heading, just a value) */}
-                <p className="text-3xl font-bold text-gray-900 mb-1" aria-label={`${stat.value} ${stat.label}`}>{stat.value}</p>
-                <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">{stat.label}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1" aria-label={`${stat.value} ${stat.label}`}>{stat.value}</p>
+                <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider sm:tracking-widest font-semibold text-center">{stat.label}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -325,13 +322,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors line-clamp-1 mb-2">
                       {event.title}
                     </h3>
-                    <div className="flex items-center gap-2">
-                      <div className="flex text-amber-400">
-                        <Star className="w-4 h-4 fill-current" />
-                      </div>
-                      <span className="text-sm font-semibold text-gray-600">{event.rating || 4.8}</span>
-                      <span className="text-sm text-gray-400">/ 5</span>
-                    </div>
+
                   </Link>
                 </motion.div>
               ))
@@ -364,9 +355,9 @@ export default function Home() {
               return (
                 <div key={occasionIdx} className="mb-20 last:mb-0">
                   {/* Occasion Header */}
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
+                  <div className="flex items-center justify-between mb-4 sm:mb-8">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-2xl overflow-hidden shadow-lg">
                         <Image
                           src={occasion.images?.[0] || occasion.image || "/placeholder.svg"}
                           alt={occasion.occasion}
@@ -375,8 +366,8 @@ export default function Home() {
                         />
                       </div>
                       <div>
-                        <h3 className="text-3xl font-bold text-gray-900">{occasion.occasion}</h3>
-                        <p className="text-sm text-gray-500">
+                        <h3 className="text-lg sm:text-3xl font-semibold sm:font-bold text-gray-900">{occasion.occasion}</h3>
+                        <p className="text-xs sm:text-sm text-gray-500">
                           {eventsForOccasion.length} {eventsForOccasion.length === 1 ? 'design' : 'designs'} available
                         </p>
                       </div>
@@ -384,17 +375,17 @@ export default function Home() {
                     <Button
                       asChild
                       variant="outline"
-                      className="rounded-full border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-6 h-11 font-semibold"
+                      className="rounded-full border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-4 h-9 sm:px-6 sm:h-11 text-xs sm:text-base font-semibold"
                     >
                       <Link href={`/all-events`} className="flex items-center gap-2">
-                        View All <ArrowRight className="w-4 h-4" />
+                        View All <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Link>
                     </Button>
                   </div>
 
                   {/* Events Grid - Horizontal scroll on mobile, grid on desktop */}
                   <div className="lg:grid lg:grid-cols-4 lg:gap-8 -mx-4 lg:mx-0">
-                    <div className="flex lg:contents gap-4 sm:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-4 lg:px-0 lg:overflow-visible lg:gap-8">
+                    <div className="flex lg:contents gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 lg:px-0 lg:overflow-visible lg:gap-8">
                       {loadingOccasionEvents ? (
                         [...Array(4)].map((_, i) => (
                           <div key={i} className="flex-shrink-0 w-[75vw] sm:w-[320px] lg:w-auto aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-50 rounded-3xl animate-pulse snap-center" />
@@ -431,13 +422,7 @@ export default function Home() {
                               <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors line-clamp-1 mb-2">
                                 {event.title}
                               </h3>
-                              <div className="flex items-center gap-2">
-                                <div className="flex text-amber-400">
-                                  <Star className="w-4 h-4 fill-current" />
-                                </div>
-                                <span className="text-sm font-semibold text-gray-600">{event.rating || 4.8}</span>
-                                <span className="text-sm text-gray-400">/ 5</span>
-                              </div>
+
                             </Link>
                           </motion.div>
                         ))

@@ -331,7 +331,3 @@ body {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
-
-/* ✅ Accessibility: Improved contrast utilities */
-/* Note: Components should use text-green-700 instead of text-green-600 for better contrast */
-/* Note: Components should use bg-green-600 instead of bg-green-500 for better contrast with white text */
